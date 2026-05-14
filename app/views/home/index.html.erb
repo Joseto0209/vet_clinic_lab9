@@ -1,0 +1,9 @@
+<div class="p-5 text-center bg-light rounded-3 mt-4">
+  <h1 class="display-4">Hello, welcome to VetClinic</h1>
+  <% if user_signed_in? %>
+    <p class="lead">You are already signed in. Select an option from the menu to continue.</p>
+  <% else %>
+    <p class="lead">Please sign in to access the system features.</p>
+    <%= link_to "Sign in", new_user_session_path, class: "btn btn-primary btn-lg mt-3" %>
+  <% end %>
+</div>

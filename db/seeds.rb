@@ -3,6 +3,12 @@ Appointment.destroy_all
 Pet.destroy_all
 Vet.destroy_all
 Owner.destroy_all
+User.destroy_all
+
+puts "Creating users..."
+User.create!(first_name: "Admin", last_name: "User", email: "admin@vetclinic.cl", password: "password123", role: :admin)
+User.create!(first_name: "Vet", last_name: "User", email: "vet@vetclinic.cl", password: "password123", role: :vet)
+User.create!(first_name: "Owner", last_name: "User", email: "owner@vetclinic.cl", password: "password123", role: :owner)
 
 puts "Creating owners..."
 owner1 = Owner.create!(first_name: "Matías", last_name: "González", email: "matias.g@gmail.com", phone: "+56912345678", address: "Av. Bicentenario 3800, Vitacura")
