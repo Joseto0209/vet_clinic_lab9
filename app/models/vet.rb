@@ -1,5 +1,6 @@
 class Vet < ApplicationRecord
   has_many :appointments
+  belongs_to :user, optional: true
 
   # Validations
   validates :first_name, presence: true

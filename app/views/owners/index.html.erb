@@ -1,6 +1,8 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1>Owners Directory</h1>
-  <%= link_to "New Owner", new_owner_path, class: "btn btn-primary" %>
+  <% if policy(Owner).new? %>
+    <%= link_to "New Owner", new_owner_path, class: "btn btn-primary" %>
+  <% end %>
 </div>
 
 <div class="card shadow-sm">
@@ -19,7 +21,11 @@
         <% @owners.each do |owner| %>
           <tr>
             <td>
-              <%= link_to "#{owner.first_name} #{owner.last_name}", owner_path(owner), class: "text-decoration-none fw-bold" %>
+              <% if policy(owner).show? %>
+                <%= link_to "#{owner.first_name} #{owner.last_name}", owner_path(owner), class: "text-decoration-none fw-bold" %>
+              <% else %>
+                <%= "#{owner.first_name} #{owner.last_name}" %>
+              <% end %>
             </td>
             <td><%= owner.email %></td>
             <td><%= owner.phone %></td>
@@ -27,8 +33,12 @@
               <span class="badge bg-secondary rounded-pill"><%= owner.pets.size %></span>
             </td>
             <td>
-              <%= link_to "Edit", edit_owner_path(owner), class: "btn btn-sm btn-outline-warning me-1" %>
-              <%= button_to "Delete", owner_path(owner), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Are you sure?" } %>
+              <% if policy(owner).edit? %>
+                <%= link_to "Edit", edit_owner_path(owner), class: "btn btn-sm btn-outline-warning me-1" %>
+              <% end %>
+              <% if policy(owner).destroy? %>
+                <%= button_to "Delete", owner_path(owner), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Are you sure?" } %>
+              <% end %>
             </td>
           </tr>
         <% end %>

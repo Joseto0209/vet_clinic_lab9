@@ -1,16 +1,20 @@
 # VetClinic App
 
-## Authentication
-This application now requires authentication for most features (owners, pets, vets, appointments, treatments). Only the home page is publicly accessible without an account.
-Devise has been added to handle this, along with specific modifications for first_name, last_name, and role variables for the `User` model.
+## Authorization
+This application now enforces authorization using Pundit. Users can only perform actions and access data according to their role matrix:
+- **Admin**: Full CRUD access to all resources and can see all data.
+- **Vet**: Can edit their own vet record. Has read-only access to owners and pets. Can manage (create/update/destroy) appointments assigned to them, and can manage treatments on their appointments.
+- **Owner**: Can only edit their own owner record. Can manage their own pets and book/manage appointments for their pets. Cannot manage treatments.
 
 ### Seeded Credentials
 The following users are available by default if you use the seed data:
 - **Admin**: `admin@vetclinic.cl` / `password123`
-- **Vet**: `vet@vetclinic.cl` / `password123`
-- **Owner**: `owner@vetclinic.cl` / `password123`
+- **Vet 1**: `vet@vetclinic.cl` / `password123`
+- **Vet 2**: `vet2@vetclinic.cl` / `password123`
+- **Owner 1**: `owner@vetclinic.cl` / `password123`
+- **Owner 2**: `owner2@vetclinic.cl` / `password123`
 
-## Setup
+## Authentication
 
 To set up and run the VetClinic application locally, follow these steps:
 

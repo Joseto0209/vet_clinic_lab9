@@ -7,7 +7,6 @@ class TreatmentTest < ActiveSupport::TestCase
       name: "Blood Test",
       medication: "N/A",
       dosage: "N/A",
-      notes: "Standard blood panel",
       administered_at: Time.current
     )
   end

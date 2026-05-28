@@ -5,9 +5,13 @@
 <div class="card shadow-sm mb-4">
   <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
     <h2 class="h4 mb-0"><%= @pet.name %> (<%= @pet.species.titleize %>)</h2>
-    <div>
-      <%= link_to "Edit", edit_pet_path(@pet), class: "btn btn-sm btn-light me-1" %>
-      <%= button_to "Delete", pet_path(@pet), method: :delete, class: "btn btn-sm btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+    <div class="d-flex">
+      <% if policy(@pet).edit? %>
+        <%= link_to "Edit", edit_pet_path(@pet), class: "btn btn-sm btn-light me-1" %>
+      <% end %>
+      <% if policy(@pet).destroy? %>
+        <%= button_to "Delete", pet_path(@pet), method: :delete, class: "btn btn-sm btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+      <% end %>
     </div>
   </div>
   <div class="card-body">
@@ -28,7 +32,11 @@
       </div>
       <div class="col-md-4">
         <p><strong>Owner:</strong> 
-          <%= link_to "#{@pet.owner.first_name} #{@pet.owner.last_name}", owner_path(@pet.owner), class: "text-decoration-none" %>
+          <% if policy(@pet.owner).show? %>
+            <%= link_to "#{@pet.owner.first_name} #{@pet.owner.last_name}", owner_path(@pet.owner), class: "text-decoration-none" %>
+          <% else %>
+            <%= "#{@pet.owner.first_name} #{@pet.owner.last_name}" %>
+          <% end %>
         </p>
       </div>
     </div>
@@ -38,7 +46,13 @@
 <h3 class="h5 mb-3">Upcoming Appointments</h3>
 <div class="list-group mb-4">
   <% @pet.appointments.upcoming.each do |appointment| %>
-    <%= link_to "Appointment on #{appointment.date.strftime('%B %d, %Y')} - Reason: #{appointment.reason}", appointment_path(appointment), class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center" %>
+    <% if policy(appointment).show? %>
+      <%= link_to "Appointment on #{appointment.date.strftime('%B %d, %Y')} - Reason: #{appointment.reason}", appointment_path(appointment), class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center" %>
+    <% else %>
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <span>Appointment on <%= appointment.date.strftime('%B %d, %Y') %> - Reason: <%= appointment.reason %></span>
+      </div>
+    <% end %>
   <% end %>
   <% if @pet.appointments.upcoming.empty? %>
     <p class="text-muted mt-2">This pet has no upcoming appointments.</p>
@@ -48,7 +62,13 @@
 <h3 class="h5 mb-3">Past Appointments</h3>
 <div class="list-group">
   <% @pet.appointments.past.each do |appointment| %>
-    <%= link_to "Appointment on #{appointment.date.strftime('%B %d, %Y')} - Reason: #{appointment.reason}", appointment_path(appointment), class: "list-group-item list-group-item-action" %>
+    <% if policy(appointment).show? %>
+      <%= link_to "Appointment on #{appointment.date.strftime('%B %d, %Y')} - Reason: #{appointment.reason}", appointment_path(appointment), class: "list-group-item list-group-item-action" %>
+    <% else %>
+      <div class="list-group-item">
+        <span>Appointment on <%= appointment.date.strftime('%B %d, %Y') %> - Reason: <%= appointment.reason %></span>
+      </div>
+    <% end %>
   <% end %>
   <% if @pet.appointments.past.empty? %>
     <p class="text-muted mt-2">This pet has no past appointments.</p>

@@ -2,18 +2,30 @@ class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
 
   def index
-    @appointments = Appointment.includes(:pet, :vet).all
+    @appointments = policy_scope(Appointment).includes(:pet, :vet)
   end
 
   def show
+    authorize @appointment
   end
 
   def new
     @appointment = Appointment.new
+    authorize @appointment
   end
 
   def create
-    @appointment = Appointment.new(appointment_params)
+    @appointment = Appointment.new(permitted_attributes(Appointment))
+    authorize @appointment
+    
+    # Assign vet and pet if silently dropped
+    @appointment.vet = current_user.vet_record if current_user.vet? && current_user.vet_record.present?
+    # Ensure pet is assigned if somehow dropped
+    if current_user.owner? && @appointment.pet_id.nil? && params[:appointment][:pet_id].present?
+      # If purely dropped by pundit, how does the user choose?
+      # Assuming we just trust permitted_attributes.
+    end
+    
     if @appointment.save
       redirect_to @appointment, notice: "Appointment was successfully created."
     else
@@ -22,10 +34,12 @@ class AppointmentsController < ApplicationController
   end
 
   def edit
+    authorize @appointment
   end
 
   def update
-    if @appointment.update(appointment_params)
+    authorize @appointment
+    if @appointment.update(permitted_attributes(@appointment))
       redirect_to @appointment, notice: "Appointment was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -33,6 +47,7 @@ class AppointmentsController < ApplicationController
   end
 
   def destroy
+    authorize @appointment
     @appointment.destroy
     redirect_to appointments_path, notice: "Appointment was successfully deleted."
   end
@@ -41,9 +56,5 @@ class AppointmentsController < ApplicationController
 
   def set_appointment
     @appointment = Appointment.includes(:pet, :vet, treatments: :rich_text_clinical_notes).find(params[:id])
-  end
-
-  def appointment_params
-    params.require(:appointment).permit(:pet_id, :vet_id, :date, :reason, :status)
   end
 end

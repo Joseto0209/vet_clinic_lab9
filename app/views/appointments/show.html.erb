@@ -7,8 +7,12 @@
     <h2 class="h4 mb-0">Appointment Details</h2>
     <div class="d-flex align-items-center gap-2">
       <span class="badge bg-light text-dark fs-6"><%= @appointment.status.titleize %></span>
-      <%= link_to "Edit", edit_appointment_path(@appointment), class: "btn btn-sm btn-light" %>
-      <%= button_to "Delete", appointment_path(@appointment), method: :delete, class: "btn btn-sm btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+      <% if policy(@appointment).edit? %>
+        <%= link_to "Edit", edit_appointment_path(@appointment), class: "btn btn-sm btn-light" %>
+      <% end %>
+      <% if policy(@appointment).destroy? %>
+        <%= button_to "Delete", appointment_path(@appointment), method: :delete, class: "btn btn-sm btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+      <% end %>
     </div>
   </div>
   <div class="card-body">
@@ -18,8 +22,20 @@
         <p><strong>Reason:</strong> <%= @appointment.reason %></p>
       </div>
       <div class="col-md-6">
-        <p><strong>Pet:</strong> <%= link_to @appointment.pet.name, pet_path(@appointment.pet), class: "text-decoration-none" %></p>
-        <p><strong>Veterinarian:</strong> <%= link_to "#{@appointment.vet.first_name} #{@appointment.vet.last_name}", vet_path(@appointment.vet), class: "text-decoration-none" %></p>
+        <p><strong>Pet:</strong>
+          <% if policy(@appointment.pet).show? %>
+            <%= link_to @appointment.pet.name, pet_path(@appointment.pet), class: "text-decoration-none" %>
+          <% else %>
+            <%= @appointment.pet.name %>
+          <% end %>
+        </p>
+        <p><strong>Veterinarian:</strong>
+          <% if policy(@appointment.vet).show? %>
+            <%= link_to "#{@appointment.vet.first_name} #{@appointment.vet.last_name}", vet_path(@appointment.vet), class: "text-decoration-none" %>
+          <% else %>
+            <%= "#{@appointment.vet.first_name} #{@appointment.vet.last_name}" %>
+          <% end %>
+        </p>
       </div>
     </div>
   </div>
@@ -27,7 +43,9 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3 class="h5 mb-0">Treatments Administered</h3>
-  <%= link_to "New Treatment", new_appointment_treatment_path(@appointment), class: "btn btn-sm btn-primary" %>
+  <% if policy(Treatment.new(appointment: @appointment)).create? %>
+    <%= link_to "New Treatment", new_appointment_treatment_path(@appointment), class: "btn btn-sm btn-primary" %>
+  <% end %>
 </div>
 
 <% if @appointment.treatments.any? %>
@@ -52,8 +70,12 @@
             <td><%= treatment.administered_at&.strftime("%B %d, %Y %I:%M %p") %></td>
             <td><%= treatment.clinical_notes %></td>
             <td>
-              <%= link_to "Edit", edit_appointment_treatment_path(@appointment, treatment), class: "btn btn-sm btn-outline-warning me-1" %>
-              <%= button_to "Delete", appointment_treatment_path(@appointment, treatment), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Are you sure?" } %>
+              <% if policy(treatment).edit? %>
+                <%= link_to "Edit", edit_appointment_treatment_path(@appointment, treatment), class: "btn btn-sm btn-outline-warning me-1" %>
+              <% end %>
+              <% if policy(treatment).destroy? %>
+                <%= button_to "Delete", appointment_treatment_path(@appointment, treatment), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Are you sure?" } %>
+              <% end %>
             </td>
           </tr>
         <% end %>

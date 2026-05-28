@@ -6,13 +6,16 @@ Owner.destroy_all
 User.destroy_all
 
 puts "Creating users..."
-User.create!(first_name: "Admin", last_name: "User", email: "admin@vetclinic.cl", password: "password123", role: :admin)
-User.create!(first_name: "Vet", last_name: "User", email: "vet@vetclinic.cl", password: "password123", role: :vet)
-User.create!(first_name: "Owner", last_name: "User", email: "owner@vetclinic.cl", password: "password123", role: :owner)
+admin_user = User.create!(first_name: "Admin", last_name: "User", email: "admin@vetclinic.cl", password: "password123", role: :admin)
+vet_user = User.create!(first_name: "Vet", last_name: "User", email: "vet@vetclinic.cl", password: "password123", role: :vet)
+owner_user = User.create!(first_name: "Owner", last_name: "User", email: "owner@vetclinic.cl", password: "password123", role: :owner)
+
+vet_user2 = User.create!(first_name: "Vet2", last_name: "User", email: "vet2@vetclinic.cl", password: "password123", role: :vet)
+owner_user2 = User.create!(first_name: "Owner2", last_name: "User", email: "owner2@vetclinic.cl", password: "password123", role: :owner)
 
 puts "Creating owners..."
-owner1 = Owner.create!(first_name: "Matías", last_name: "González", email: "matias.g@gmail.com", phone: "+56912345678", address: "Av. Bicentenario 3800, Vitacura")
-owner2 = Owner.create!(first_name: "Isidora", last_name: "Undurraga", email: "isi.u@hotmail.com", phone: "+56987654321", address: "Av. San Martín 450, Viña del Mar")
+owner1 = Owner.create!(first_name: "Matías", last_name: "González", email: "matias.g@gmail.com", phone: "+56912345678", address: "Av. Bicentenario 3800, Vitacura", user: owner_user)
+owner2 = Owner.create!(first_name: "Isidora", last_name: "Undurraga", email: "isi.u@hotmail.com", phone: "+56987654321", address: "Av. San Martín 450, Viña del Mar", user: owner_user2)
 owner3 = Owner.create!(first_name: "Diego", last_name: "Tapia", email: "diego.t@yahoo.cl", phone: "+56955555555", address: "Barrio República, Santiago")
 
 puts "Registering pets..."
@@ -29,8 +32,8 @@ pet4.photo.attach(io: File.open(Rails.root.join('db', 'seeds', 'pets', 'dog3.jpg
 pet5.photo.attach(io: File.open(Rails.root.join('db', 'seeds', 'pets', 'rabbit1.jpg')), filename: 'rabbit1.jpg', content_type: 'image/jpeg')
 
 puts "Creating veterinarians..."
-vet1 = Vet.create!(first_name: "Javiera", last_name: "Soto", email: "jsoto@veterinaria.cl", phone: "+56911112222", specialization: "General Medicine")
-vet2 = Vet.create!(first_name: "Rodrigo", last_name: "Pérez", email: "rperez@veterinaria.cl", phone: "+56933334444", specialization: "Surgery and Traumatology")
+vet1 = Vet.create!(first_name: "Javiera", last_name: "Soto", email: "jsoto@veterinaria.cl", phone: "+56911112222", specialization: "General Medicine", user: vet_user)
+vet2 = Vet.create!(first_name: "Rodrigo", last_name: "Pérez", email: "rperez@veterinaria.cl", phone: "+56933334444", specialization: "Surgery and Traumatology", user: vet_user2)
 
 puts "Scheduling appointments..."
 app1 = Appointment.create!(pet: pet1, vet: vet1, date: Time.current - 2.days, reason: "Ate a sausage at the barbecue", status: :completed)

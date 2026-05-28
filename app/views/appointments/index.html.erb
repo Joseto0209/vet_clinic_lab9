@@ -1,6 +1,8 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1>Appointments</h1>
-  <%= link_to "New Appointment", new_appointment_path, class: "btn btn-primary" %>
+  <% if policy(Appointment).new? %>
+    <%= link_to "New Appointment", new_appointment_path, class: "btn btn-primary" %>
+  <% end %>
 </div>
 
 <div class="card shadow-sm">
@@ -19,9 +21,27 @@
       <tbody>
         <% @appointments.each do |appointment| %>
           <tr>
-            <td><%= link_to appointment.date.strftime("%B %d, %Y %H:%M"), appointment_path(appointment), class: "text-decoration-none fw-bold" %></td>
-            <td><%= link_to appointment.pet.name, pet_path(appointment.pet), class: "text-decoration-none" %></td>
-            <td><%= link_to "#{appointment.vet.first_name} #{appointment.vet.last_name}", vet_path(appointment.vet), class: "text-decoration-none" %></td>
+            <td>
+              <% if policy(appointment).show? %>
+                <%= link_to appointment.date.strftime("%B %d, %Y %H:%M"), appointment_path(appointment), class: "text-decoration-none fw-bold" %>
+              <% else %>
+                <%= appointment.date.strftime("%B %d, %Y %H:%M") %>
+              <% end %>
+            </td>
+            <td>
+              <% if policy(appointment.pet).show? %>
+                <%= link_to appointment.pet.name, pet_path(appointment.pet), class: "text-decoration-none" %>
+              <% else %>
+                <%= appointment.pet.name %>
+              <% end %>
+            </td>
+            <td>
+              <% if policy(appointment.vet).show? %>
+                <%= link_to "#{appointment.vet.first_name} #{appointment.vet.last_name}", vet_path(appointment.vet), class: "text-decoration-none" %>
+              <% else %>
+                <%= "#{appointment.vet.first_name} #{appointment.vet.last_name}" %>
+              <% end %>
+            </td>
             <td><%= appointment.reason %></td>
             <td>
               <% status_class = case appointment.status 
@@ -33,11 +53,15 @@
               <span class="badge <%= status_class %>"><%= appointment.status.titleize %></span>
             </td>
             <td class="d-flex">
-              <% if ['in_progress', 'completed'].include?(appointment.status) %>
+              <% if ['in_progress', 'completed'].include?(appointment.status) && policy(Treatment.new(appointment: appointment)).create? %>
                 <%= link_to "Add Treatment", new_appointment_treatment_path(appointment), class: "btn btn-sm btn-success me-1" %>
               <% end %>
-              <%= link_to "Edit", edit_appointment_path(appointment), class: "btn btn-sm btn-outline-warning me-1" %>
-              <%= button_to "Delete", appointment_path(appointment), method: :delete, class: "btn btn-sm btn-outline-danger", form_class: "d-inline", data: { turbo_confirm: "Are you sure?" } %>
+              <% if policy(appointment).edit? %>
+                <%= link_to "Edit", edit_appointment_path(appointment), class: "btn btn-sm btn-outline-warning me-1" %>
+              <% end %>
+              <% if policy(appointment).destroy? %>
+                <%= button_to "Delete", appointment_path(appointment), method: :delete, class: "btn btn-sm btn-outline-danger", form_class: "d-inline", data: { turbo_confirm: "Are you sure?" } %>
+              <% end %>
             </td>
           </tr>
         <% end %>

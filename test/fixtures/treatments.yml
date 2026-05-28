@@ -5,7 +5,6 @@ one:
   name: Blood Test
   medication: N/A
   dosage: N/A
-  notes: Standard blood panel
   administered_at: 2026-04-09 14:49:55
 
 two:
@@ -13,5 +12,4 @@ two:
   name: Rabies Vaccine
   medication: Rabies Vaccine
   dosage: 1 ml
-  notes: Annual vaccination
   administered_at: 2026-04-10 10:30:00
