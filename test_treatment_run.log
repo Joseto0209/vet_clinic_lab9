@@ -1,0 +1,65 @@
+Running 7 tests in a single process (parallelization threshold is 50)
+Run options: --seed 18666
+
+# Running:
+
+F
+
+Failure:
+TreatmentsControllerTest#test_should_get_new [test/controllers/treatments_controller_test.rb:11]:
+Expected response to be a <2XX: success>, but was a <404: Not Found>
+
+bin/rails test test/controllers/treatments_controller_test.rb:9
+
+F
+
+Failure:
+TreatmentsControllerTest#test_should_update_treatment_with_valid_params [test/controllers/treatments_controller_test.rb:45]:
+Expected response to be a <3XX: redirect>, but was a <404: Not Found>
+
+bin/rails test test/controllers/treatments_controller_test.rb:43
+
+F
+
+Failure:
+TreatmentsControllerTest#test_should_create_treatment_with_valid_params [test/controllers/treatments_controller_test.rb:24]:
+Expected response to be a <3XX: redirect>, but was a <404: Not Found>
+
+bin/rails test test/controllers/treatments_controller_test.rb:14
+
+F
+
+Failure:
+TreatmentsControllerTest#test_should_get_edit [test/controllers/treatments_controller_test.rb:40]:
+Expected response to be a <2XX: success>, but was a <404: Not Found>
+
+bin/rails test test/controllers/treatments_controller_test.rb:38
+
+F
+
+Failure:
+TreatmentsControllerTest#test_should_not_create_treatment_with_invalid_params [test/controllers/treatments_controller_test.rb:35]:
+Expected response to be a <422: unprocessable_entity>, but was a <404: Not Found>
+
+bin/rails test test/controllers/treatments_controller_test.rb:28
+
+F
+
+Failure:
+TreatmentsControllerTest#test_should_destroy_treatment [test/controllers/treatments_controller_test.rb:58]:
+Expected response to be a <3XX: redirect>, but was a <404: Not Found>
+
+bin/rails test test/controllers/treatments_controller_test.rb:54
+
+F
+
+Failure:
+TreatmentsControllerTest#test_should_not_update_treatment_with_invalid_params [test/controllers/treatments_controller_test.rb:51]:
+Expected response to be a <422: unprocessable_entity>, but was a <404: Not Found>
+
+bin/rails test test/controllers/treatments_controller_test.rb:49
+
+
+
+Finished in 3.698802s, 1.8925 runs/s, 3.5147 assertions/s.
+7 runs, 13 assertions, 7 failures, 0 errors, 0 skips
